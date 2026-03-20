@@ -48,4 +48,23 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
-"# contarestaurante"  
+  "# contarestaurante"
+
+# 🍽️ Racha Conta - React Native & Expo
+
+Calculadora inteligente para divisão de contas de restaurante.
+
+### ✨ Diferenciais:
+
+- Divisão proporcional de consumo.
+- Opção para escolher quem na mesa paga a gorjeta.
+- **Inovação:** Suporte para "Contribuidores Extras" (pessoas que não consumiram mas ajudam na gorjeta).
+
+### 🚀 Tecnologias:
+
+- React Native / Expo
+- TypeScript
+- Hooks (useState, useMemo)
+
+- TypeScript
+- Hooks (useState, useMemo)
