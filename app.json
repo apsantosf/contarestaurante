@@ -19,22 +19,10 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false,
       "package": "com.apsantosf.contarestaurante"
     },
-    "web": {
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
-    },
-    "plugins":
-    ],
-    "experiments": {
-      "typedRoutes": true,
-      "reactCompiler": true
-    },
+    "plugins": ["expo-router"],
     "extra": {
-      "router": {},
       "eas": {
         "projectId": "83c58ac2-e390-4e11-aebe-e34e4a583384"
       }
