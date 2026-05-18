@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -17,7 +17,9 @@ import { ResultCard } from "../../src/components/ResultCard";
 interface HistoricoItem {
   id: string;
   data: string;
-  valor: string;
+  valorTotalMesa: string;
+  valorIndividual: string;
+  detalhes: string;
 }
 
 export default function HomeScreen() {
@@ -29,14 +31,12 @@ export default function HomeScreen() {
   const [busca, setBusca] = useState("");
   const [historico, setHistorico] = useState<HistoricoItem[]>([]);
 
-  // Referências para controlar o foco de cada input
   const inputContaRef = useRef<TextInput>(null);
   const inputPorcentagemRef = useRef<TextInput>(null);
   const inputTotalPessoasRef = useRef<TextInput>(null);
   const inputPessoasGorjetaRef = useRef<TextInput>(null);
   const inputExtrasGorjetaRef = useRef<TextInput>(null);
 
-  // Inicia o app focando automaticamente no primeiro campo de texto
   useEffect(() => {
     carregarHistorico();
     setTimeout(() => {
@@ -117,32 +117,29 @@ export default function HomeScreen() {
 
   const salvarNoHistorico = async () => {
     if (!conta || conta === "0,00" || conta === "0") return;
+    
+    // Constrói uma descrição em texto corrido e detalhado de como foi o racha
+    const textoDescricao = `${totalPessoas}p consumo • Taxa: ${porcentagem}% • ${pessoasGorjeta}p gorjeta • +${pessoasApenasGorjeta} extras`;
 
     const novo: HistoricoItem = {
       id: Date.now().toString(),
       data: new Date().toLocaleDateString("pt-BR"),
-      valor: res.totalCompleto,
+      valorTotalMesa: res.totalMesaBruto,
+      valorIndividual: res.totalCompleto,
+      detalhes: textoDescricao,
     };
-
-    // Atualiza o estado e persiste de forma síncrona no armazenamento local
+    
     const listaAtualizada = [novo, ...historico].slice(0, 10);
     setHistorico(listaAtualizada);
-    await AsyncStorage.setItem(
-      "@historico_contas",
-      JSON.stringify(listaAtualizada),
-    );
-
-    setConta("");
-    inputContaRef.current?.focus();
+    await AsyncStorage.setItem("@historico_contas", JSON.stringify(listaAtualizada));
+    
+    // FIX: Removida a linha que limpava a conta. O valor permanece intacto na tela.
   };
 
   const excluirItem = async (id: string) => {
     const listaAtualizada = historico.filter((i) => i.id !== id);
     setHistorico(listaAtualizada);
-    await AsyncStorage.setItem(
-      "@historico_contas",
-      JSON.stringify(listaAtualizada),
-    );
+    await AsyncStorage.setItem("@historico_contas", JSON.stringify(listaAtualizada));
   };
 
   return (
@@ -219,7 +216,7 @@ export default function HomeScreen() {
                 onChangeText={setPessoasApenasGorjeta}
                 keyboardType="numeric"
                 returnKeyType="next"
-                onSubmitEditing={() => inputContaRef.current?.focus()} // Voltar ao início ao clicar enter
+                onSubmitEditing={() => inputContaRef.current?.focus()}
                 selectTextOnFocus={true}
               />
             </View>
@@ -241,7 +238,7 @@ export default function HomeScreen() {
             >
               <Text style={styles.btnText}>💾 Salvar</Text>
             </TouchableOpacity>
-
+            
             <TouchableOpacity
               style={[styles.btnAction, { backgroundColor: "#ff9800" }]}
               onPress={limparCampos}
@@ -266,11 +263,17 @@ export default function HomeScreen() {
               <Text style={styles.subTitle}>Últimos Cálculos</Text>
               {historico.map((item) => (
                 <View key={item.id} style={styles.itemHistorico}>
-                  <View>
-                    <Text style={{ fontSize: 12, color: "#666" }}>
-                      {item.data}
+                  <View style={{ flex: 1, paddingRight: 10 }}>
+                    <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 2 }}>
+                      <Text style={{ fontSize: 11, color: "#888" }}>{item.data}</Text>
+                      <Text style={{ fontSize: 11, color: "#444" }}>Mesa: R$ {item.valorTotalMesa}</Text>
+                    </View>
+                    <Text style={{ fontWeight: "bold", fontSize: 15, color: "#1e88e5" }}>
+                      Cada um: R$ {item.valorIndividual}
                     </Text>
-                    <Text style={{ fontWeight: "bold" }}>R$ {item.valor}</Text>
+                    <Text style={{ fontSize: 12, color: "#666", marginTop: 2, fontStyle: "italic" }}>
+                      {item.detalhes}
+                    </Text>
                   </View>
                   <TouchableOpacity onPress={() => excluirItem(item.id)}>
                     <Ionicons name="trash-outline" size={20} color="red" />
