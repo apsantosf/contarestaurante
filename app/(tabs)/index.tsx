@@ -120,6 +120,7 @@ export default function HomeScreen() {
   const salvarNoHistorico = async () => {
     if (!conta || conta === "0,00" || conta === "0") return;
 
+    // FIX DEFINITIVO: Texto corrigido aqui para salvar no banco com "Taxa:"
     const textoDescricao = `${totalPessoas}p consumo • Taxa: ${porcentagem}% • ${pessoasGorjeta}p gorjeta • +${pessoasApenasGorjeta} extras`;
 
     const novo: HistoricoItem = {
@@ -129,7 +130,7 @@ export default function HomeScreen() {
       valorIndividual: res.totalCompleto,
       valorSoConsumo: res.totalSoConsumo,
       valorSoGorjeta: res.totalSoGorjeta,
-      detalhes: textoDescricao,
+      detalhes: textoDescricao, // Agora salva o texto limpo com "Taxa"
     };
 
     const listaAtualizada = [novo, ...historico].slice(0, 10);
@@ -271,55 +272,89 @@ export default function HomeScreen() {
               {historico.map((item) => (
                 <View key={item.id} style={styles.itemHistorico}>
                   <View style={{ flex: 1, paddingRight: 10 }}>
+                    {/* Linha 1: Data e Total da Mesa */}
                     <View
                       style={{
                         flexDirection: "row",
                         justifyContent: "space-between",
-                        marginBottom: 2,
+                        marginBottom: 4,
                       }}
                     >
                       <Text style={{ fontSize: 11, color: "#888" }}>
                         {item.data}
                       </Text>
-                      <Text style={{ fontSize: 11, color: "#444" }}>
+                      <Text
+                        style={{
+                          fontSize: 11,
+                          color: "#444",
+                          fontWeight: "500",
+                        }}
+                      >
                         Mesa: R$ {item.valorTotalMesa}
                       </Text>
                     </View>
 
+                    {/* Linha 2: Valor Individual Principal */}
                     <Text
                       style={{
                         fontWeight: "bold",
                         fontSize: 15,
                         color: "#1e88e5",
+                        marginBottom: 4,
                       }}
                     >
                       Cada um: R$ {item.valorIndividual}
                     </Text>
 
-                    <Text
-                      style={{
-                        fontSize: 11,
-                        color: "#2e7d32",
-                        marginTop: 2,
-                        fontWeight: "500",
-                      }}
-                    >
-                      Consumo ind: R$ {item.valorSoConsumo || "0,00"} • Gorjeta
-                      ind: R$ {item.valorSoGorjeta || "0,00"}
-                    </Text>
-
+                    {/* Linha 3: Descrição dos participantes (Usa o item.detalhes gravado limpo) */}
                     <Text
                       style={{
                         fontSize: 12,
                         color: "#666",
-                        marginTop: 4,
                         fontStyle: "italic",
+                        marginBottom: 4,
                       }}
                     >
                       {item.detalhes}
                     </Text>
+
+                    {/* Linha 4: Detalhamento dos valores no rodapé */}
+                    <View
+                      style={{
+                        borderTopWidth: 1,
+                        borderTopColor: "#f1f3f5",
+                        paddingTop: 4,
+                        marginTop: 2,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 11,
+                          color: "#2e7d32",
+                          fontWeight: "600",
+                        }}
+                      >
+                        ↳ Divisão do Consumo: R$ {item.valorSoConsumo || "0,00"}{" "}
+                        por pessoa
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 11,
+                          color: "#e65100",
+                          fontWeight: "600",
+                          marginTop: 1,
+                        }}
+                      >
+                        ↳ Divisão da Gorjeta: R$ {item.valorSoGorjeta || "0,00"}{" "}
+                        por pessoa
+                      </Text>
+                    </View>
                   </View>
-                  <TouchableOpacity onPress={() => excluirItem(item.id)}>
+
+                  <TouchableOpacity
+                    onPress={() => excluirItem(item.id)}
+                    style={{ justifyContent: "center" }}
+                  >
                     <Ionicons name="trash-outline" size={20} color="red" />
                   </TouchableOpacity>
                 </View>
