@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useEffect, useMemo, useState, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -19,6 +19,8 @@ interface HistoricoItem {
   data: string;
   valorTotalMesa: string;
   valorIndividual: string;
+  valorSoConsumo: string;
+  valorSoGorjeta: string;
   detalhes: string;
 }
 
@@ -117,8 +119,7 @@ export default function HomeScreen() {
 
   const salvarNoHistorico = async () => {
     if (!conta || conta === "0,00" || conta === "0") return;
-    
-    // Constrói uma descrição em texto corrido e detalhado de como foi o racha
+
     const textoDescricao = `${totalPessoas}p consumo • Taxa: ${porcentagem}% • ${pessoasGorjeta}p gorjeta • +${pessoasApenasGorjeta} extras`;
 
     const novo: HistoricoItem = {
@@ -126,20 +127,26 @@ export default function HomeScreen() {
       data: new Date().toLocaleDateString("pt-BR"),
       valorTotalMesa: res.totalMesaBruto,
       valorIndividual: res.totalCompleto,
+      valorSoConsumo: res.totalSoConsumo,
+      valorSoGorjeta: res.totalSoGorjeta,
       detalhes: textoDescricao,
     };
-    
+
     const listaAtualizada = [novo, ...historico].slice(0, 10);
     setHistorico(listaAtualizada);
-    await AsyncStorage.setItem("@historico_contas", JSON.stringify(listaAtualizada));
-    
-    // FIX: Removida a linha que limpava a conta. O valor permanece intacto na tela.
+    await AsyncStorage.setItem(
+      "@historico_contas",
+      JSON.stringify(listaAtualizada),
+    );
   };
 
   const excluirItem = async (id: string) => {
     const listaAtualizada = historico.filter((i) => i.id !== id);
     setHistorico(listaAtualizada);
-    await AsyncStorage.setItem("@historico_contas", JSON.stringify(listaAtualizada));
+    await AsyncStorage.setItem(
+      "@historico_contas",
+      JSON.stringify(listaAtualizada),
+    );
   };
 
   return (
@@ -238,7 +245,7 @@ export default function HomeScreen() {
             >
               <Text style={styles.btnText}>💾 Salvar</Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity
               style={[styles.btnAction, { backgroundColor: "#ff9800" }]}
               onPress={limparCampos}
@@ -264,14 +271,51 @@ export default function HomeScreen() {
               {historico.map((item) => (
                 <View key={item.id} style={styles.itemHistorico}>
                   <View style={{ flex: 1, paddingRight: 10 }}>
-                    <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 2 }}>
-                      <Text style={{ fontSize: 11, color: "#888" }}>{item.data}</Text>
-                      <Text style={{ fontSize: 11, color: "#444" }}>Mesa: R$ {item.valorTotalMesa}</Text>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        marginBottom: 2,
+                      }}
+                    >
+                      <Text style={{ fontSize: 11, color: "#888" }}>
+                        {item.data}
+                      </Text>
+                      <Text style={{ fontSize: 11, color: "#444" }}>
+                        Mesa: R$ {item.valorTotalMesa}
+                      </Text>
                     </View>
-                    <Text style={{ fontWeight: "bold", fontSize: 15, color: "#1e88e5" }}>
+
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: 15,
+                        color: "#1e88e5",
+                      }}
+                    >
                       Cada um: R$ {item.valorIndividual}
                     </Text>
-                    <Text style={{ fontSize: 12, color: "#666", marginTop: 2, fontStyle: "italic" }}>
+
+                    <Text
+                      style={{
+                        fontSize: 11,
+                        color: "#2e7d32",
+                        marginTop: 2,
+                        fontWeight: "500",
+                      }}
+                    >
+                      Consumo ind: R$ {item.valorSoConsumo || "0,00"} • Gorjeta
+                      ind: R$ {item.valorSoGorjeta || "0,00"}
+                    </Text>
+
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        color: "#666",
+                        marginTop: 4,
+                        fontStyle: "italic",
+                      }}
+                    >
                       {item.detalhes}
                     </Text>
                   </View>
