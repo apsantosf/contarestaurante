@@ -23,6 +23,7 @@ export default function TabLayout() {
         name="index" // Se o arquivo da calculadora for index.tsx, mantenha assim.
         options={{
           title: "Racha Conta",
+          headerShown: false,
           tabBarIcon: ({ color }) => (
             <IconSymbol size={28} name="cart.fill" color={color} />
           ),
