@@ -169,7 +169,7 @@ export default function HomeScreen() {
             placeholder="0,00"
             returnKeyType="next"
             onSubmitEditing={() => inputTotalPessoasRef.current?.focus()}
-            selectTextOnFocus={true}
+            // selectTextOnFocus={true}
           />
 
           <View style={styles.row}>
