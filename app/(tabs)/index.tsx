@@ -30,7 +30,7 @@ export default function HomeScreen() {
   const [totalPessoas, setTotalPessoas] = useState("1");
   const [pessoasGorjeta, setPessoasGorjeta] = useState("1");
   const [pessoasApenasGorjeta, setPessoasApenasGorjeta] = useState("0");
-  const [busca, setBusca] = useState("");
+  // const [busca, setBusca] = useState("");
   const [historico, setHistorico] = useState<HistoricoItem[]>([]);
 
   const inputContaRef = useRef<TextInput>(null);
