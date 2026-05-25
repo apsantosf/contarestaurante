@@ -4,19 +4,43 @@ import { Share, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 interface BotoesAcaoProps {
   onSalvar: () => void;
   onLimpar: () => void;
-  totalCompleto: string;
   totalMesaBruto: string;
+  totalCompleto: string;
+  totalSoGorjeta: string;
+  totalPessoas: string;
+  pessoasApenasGorjeta: string;
 }
 
 export function BotoesAcao({
   onSalvar,
   onLimpar,
-  totalCompleto,
   totalMesaBruto,
+  totalCompleto,
+  totalSoGorjeta,
+  totalPessoas,
+  pessoasApenasGorjeta,
 }: BotoesAcaoProps) {
   const compartilharConta = () => {
+    // Tratando o texto para plural/singular de forma inteligente
+    const textoPessoasConsumo =
+      parseInt(totalPessoas) === 1 ? "pessoa" : "pessoas";
+    const textoPessoasExtras =
+      parseInt(pessoasApenasGorjeta) === 1 ? "pessoa" : "pessoas";
+
+    // Montando a mensagem estruturada com formatação para o WhatsApp
+    const mensagem =
+      `💰 *Racha Conta — Resumo da Mesa*\n\n` +
+      `📊 *Geral:*\n` +
+      `• Total da Mesa (com taxa): R$ ${totalMesaBruto}\n\n` +
+      `🍽️ *Quem Consumiu:*\n` +
+      `• Individual (Consumo + Gorjeta): R$ ${totalCompleto}\n` +
+      `• Quantidade: ${totalPessoas} ${textoPessoasConsumo}\n\n` +
+      `💸 *Extras (Apenas Gorjeta):*\n` +
+      `• Valor da Gorjeta Individual: R$ ${totalSoGorjeta}\n` +
+      `• Quantidade: ${pessoasApenasGorjeta} ${textoPessoasExtras}`;
+
     Share.share({
-      message: `💰 Racha Conta\nIndividual: R$ ${totalCompleto}\nTotal Mesa: R$ ${totalMesaBruto}`,
+      message: mensaje,
     });
   };
 

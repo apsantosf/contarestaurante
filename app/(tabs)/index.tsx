@@ -186,8 +186,11 @@ export default function HomeScreen() {
           <BotoesAcao
             onSalvar={salvarNoHistorico}
             onLimpar={limparCampos}
-            totalCompleto={res.totalCompleto}
             totalMesaBruto={res.totalMesaBruto}
+            totalCompleto={res.totalCompleto}
+            totalSoGorjeta={res.totalSoGorjeta} // Passando o valor da gorjeta calculado no useMemo
+            totalPessoas={totalPessoas} // Passando o estado de pessoas do consumo
+            pessoasApenasGorjeta={pessoasApenasGorjeta} // Passando o estado de pessoas extras
           />
 
           {historico.length > 0 && (
