@@ -158,12 +158,10 @@ export default function HomeScreen() {
         style={{ flex: 1, width: "100%" }}
       >
         <ScrollView contentContainerStyle={styles.container}>
-          <Text style={styles.title}>Racha Conta 🍽️</Text>
-
           <View style={styles.headerContainer}>
             <Text style={styles.title}>Racha Conta 🍽️</Text>
             <Text style={styles.txtVersaoTop}>
-              v{Constants.expoConfig?.version || "1.0.0"}
+              v{Constants.expoConfig?.version || "1.1.2"}
             </Text>
           </View>
 
