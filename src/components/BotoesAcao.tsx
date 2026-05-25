@@ -40,7 +40,7 @@ export function BotoesAcao({
       `• Quantidade: ${pessoasApenasGorjeta} ${textoPessoasExtras}`;
 
     Share.share({
-      message: mensaje,
+      message: mensagem,
     });
   };
 
