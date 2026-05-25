@@ -11,6 +11,7 @@ import {
 } from "react-native";
 
 // Nossos novos componentes limpos
+import Constants from "expo-constants";
 import { BotoesAcao } from "../../src/components/BotoesAcao";
 import { FormularioConta } from "../../src/components/FormularioConta";
 import { ItemHistorico } from "../../src/components/ItemHistorico";
@@ -159,6 +160,13 @@ export default function HomeScreen() {
         <ScrollView contentContainerStyle={styles.container}>
           <Text style={styles.title}>Racha Conta 🍽️</Text>
 
+          <View style={styles.headerContainer}>
+            <Text style={styles.title}>Racha Conta 🍽️</Text>
+            <Text style={styles.txtVersaoTop}>
+              v{Constants.expoConfig?.version || "1.0.0"}
+            </Text>
+          </View>
+
           {/* Chamando os subcomponentes organizados e passando as props */}
           <FormularioConta
             conta={conta}
@@ -226,11 +234,20 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     borderRadius: Platform.OS === "web" ? 20 : 0,
   },
+  headerContainer: {
+    alignItems: "center",
+    marginBottom: 25, // Dá um espaço confortável antes do formulário
+  },
   title: {
     fontSize: 26,
     fontWeight: "bold",
-    marginBottom: 20,
     textAlign: "center",
+  },
+  txtVersaoTop: {
+    fontSize: 13,
+    color: "#888888", // Um cinza suave para não brigar com o título
+    fontWeight: "600",
+    marginTop: 2, // Cola o número logo abaixo do texto
   },
   resumoMesa: {
     backgroundColor: "#e8f5e9",
